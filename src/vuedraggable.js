@@ -648,7 +648,16 @@ const draggableComponent = {
     },
 
     onDragMove(evt, originalEvent) {
+      if (evt.dragged && evt.dragged._underlying_vm_multidrag_ !== undefined) {
+        return this.onDragMoveMulti(evt, originalEvent);
+      } else {
+        return this.onDragMoveSingle(evt, originalEvent);
+      }
+    },
+
+    onDragMoveSingle(evt, originalEvent) {
       const onMove = this.move;
+
       if (!onMove || !this.realList) {
         return true;
       }
@@ -657,13 +666,29 @@ const draggableComponent = {
       const draggedContext = this.context;
       const futureIndex = this.computeFutureIndex(relatedContext, evt);
       Object.assign(draggedContext, { futureIndex });
+
       const sendEvt = Object.assign({}, evt, {
         relatedContext,
         draggedContext
       });
       return onMove(sendEvt, originalEvent);
     },
+    onDragMoveMulti(evt, originalEvent) {
+      const onMove = this.move;
+      if (!onMove || !this.realList) {
+        return true;
+      }
 
+      const relatedContext = this.getRelatedContextFromMoveEvent(evt);
+      const draggedContext = this.multidragContexts;
+      const futureIndex = this.computeFutureIndex(relatedContext, evt);
+      Object.assign(draggedContext, { futureIndex });
+      const sendEvt = Object.assign({}, evt, {
+        relatedContext,
+        draggedContext
+      });
+      return onMove(sendEvt, originalEvent);
+    },
     onDragEnd() {
       this.computeIndexes();
       draggingElement = null;

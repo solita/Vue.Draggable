@@ -11,6 +11,7 @@
         @change="log"
         @select="log"
         @deselect="log"
+        :move="log"
       >
         <div
           class="list-group-item"
@@ -32,6 +33,7 @@
         selected-class="selected"
         @change="log"
         @select="log"
+        :move="log"
         @deselect="log"
       >
         <div

@@ -4681,6 +4681,13 @@ var draggableComponent = {
       return draggedInList || !evt.willInsertAfter ? currentIndex : currentIndex + 1;
     },
     onDragMove: function onDragMove(evt, originalEvent) {
+      if (evt.dragged && evt.dragged._underlying_vm_multidrag_ !== undefined) {
+        return this.onDragMoveMulti(evt, originalEvent);
+      } else {
+        return this.onDragMoveSingle(evt, originalEvent);
+      }
+    },
+    onDragMoveSingle: function onDragMoveSingle(evt, originalEvent) {
       var onMove = this.move;
 
       if (!onMove || !this.realList) {
@@ -4689,6 +4696,25 @@ var draggableComponent = {
 
       var relatedContext = this.getRelatedContextFromMoveEvent(evt);
       var draggedContext = this.context;
+      var futureIndex = this.computeFutureIndex(relatedContext, evt);
+      Object.assign(draggedContext, {
+        futureIndex: futureIndex
+      });
+      var sendEvt = Object.assign({}, evt, {
+        relatedContext: relatedContext,
+        draggedContext: draggedContext
+      });
+      return onMove(sendEvt, originalEvent);
+    },
+    onDragMoveMulti: function onDragMoveMulti(evt, originalEvent) {
+      var onMove = this.move;
+
+      if (!onMove || !this.realList) {
+        return true;
+      }
+
+      var relatedContext = this.getRelatedContextFromMoveEvent(evt);
+      var draggedContext = this.multidragContexts;
       var futureIndex = this.computeFutureIndex(relatedContext, evt);
       Object.assign(draggedContext, {
         futureIndex: futureIndex
