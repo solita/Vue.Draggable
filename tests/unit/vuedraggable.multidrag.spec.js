@@ -515,7 +515,7 @@ describe("draggable.vue with multidrag plugin", () => {
           return element;
         });
         const newElement = newElements[0];
-        newElement._underlying_vm_multidrag_ = newItems;
+        newElement._underlying_vm_ = newItems;
 
         // drop after last item
         const addEvent = {
