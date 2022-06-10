@@ -4451,7 +4451,7 @@ var draggableComponent = {
         }).map(function (e) {
           return e.element;
         });
-        evt.item._underlying_vm_multidrag_ = this.clone(elements);
+        evt.item._underlying_vm_ = this.clone(elements);
       } else {
         this.context = this.getUnderlyingVm(evt.item);
         evt.item._underlying_vm_ = this.clone(this.context.element);
@@ -4466,7 +4466,7 @@ var draggableComponent = {
       }
     },
     onDragAddMulti: function onDragAddMulti(evt) {
-      var elements = evt.item._underlying_vm_multidrag_;
+      var elements = evt.item._underlying_vm_;
 
       if (elements === undefined) {
         return;
@@ -4672,7 +4672,7 @@ var draggableComponent = {
       return draggedInList || !evt.willInsertAfter ? currentIndex : currentIndex + 1;
     },
     onDragMove: function onDragMove(evt, originalEvent) {
-      if (evt.dragged && evt.dragged._underlying_vm_multidrag_ !== undefined) {
+      if (evt.dragged && Array.isArray(evt.dragged._underlying_vm_)) {
         return this.onDragMoveMulti(evt, originalEvent);
       } else {
         return this.onDragMoveSingle(evt, originalEvent);
