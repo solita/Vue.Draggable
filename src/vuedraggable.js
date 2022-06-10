@@ -483,7 +483,6 @@ const draggableComponent = {
         evt.item._underlying_vm_ = this.clone(this.context.element);
         draggingElement = evt.item;
       }
-      this.emitChanges({ started: evt.item._underlying_vm_ });
     },
 
     onDragAdd(evt) {
