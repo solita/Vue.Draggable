@@ -511,7 +511,7 @@ const draggableComponent = {
       // emit change
       const added = elements.map((element, index) => ({
         element,
-        newIndex: this.getVmIndex(evt.newIndex) + index
+        newIndex: newIndex + index
       }));
       this.emitChanges({ added });
     },
@@ -606,8 +606,12 @@ const draggableComponent = {
       );
 
       // move items
+      const newLowestIndex =
+        evt.newIndicies && evt.newIndicies.length > 0
+          ? evt.newIndicies[0].index
+          : evt.newIndex;
       const oldIndicies = itemsWithIndex.map(({ index }) => index - headerSize);
-      const newIndex = this.getVmIndex(evt.newIndicies[0].index);
+      const newIndex = this.getVmIndex(newLowestIndex);
       // note: Array.from = prevent sort change side effect
       this.updatePositions(Array.from(oldIndicies), newIndex);
       // emit change
@@ -616,7 +620,7 @@ const draggableComponent = {
         return {
           element: context.element,
           oldIndex,
-          newIndex: this.getVmIndex(evt.newIndex) + index
+          newIndex: newIndex + index
         };
       });
       this.emitChanges({ moved });

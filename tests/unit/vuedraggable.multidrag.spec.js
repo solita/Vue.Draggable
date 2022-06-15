@@ -387,8 +387,8 @@ describe("draggable.vue with multidrag plugin", () => {
       it("should send events", () => {
         const expectedEvents = {
           moved: [
-            { element: "a", oldIndex: 0, newIndex: 2 },
-            { element: "b", oldIndex: 1, newIndex: 3 }
+            { element: "a", oldIndex: 0, newIndex: 3 },
+            { element: "b", oldIndex: 1, newIndex: 4 }
           ]
         };
         const {

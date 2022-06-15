@@ -4466,8 +4466,6 @@ var draggableComponent = {
       }
     },
     onDragAddMulti: function onDragAddMulti(evt) {
-      var _this7 = this;
-
       var elements = evt.item._underlying_vm_;
 
       if (elements === undefined) {
@@ -4487,7 +4485,7 @@ var draggableComponent = {
       var added = elements.map(function (element, index) {
         return {
           element: element,
-          newIndex: _this7.getVmIndex(evt.newIndex) + index
+          newIndex: newIndex + index
         };
       });
       this.emitChanges({
@@ -4521,7 +4519,7 @@ var draggableComponent = {
       }
     },
     onDragRemoveMulti: function onDragRemoveMulti(evt) {
-      var _this8 = this;
+      var _this7 = this;
 
       // for match item index and element index
       var headerSize = (this.$slots.header || []).length || 0; // sort old indicies
@@ -4536,7 +4534,7 @@ var draggableComponent = {
       items.forEach(function (_ref8) {
         var item = _ref8.multiDragElement,
             index = _ref8.index;
-        Object(helper["c" /* insertNodeAt */])(_this8.rootContainer, item, index);
+        Object(helper["c" /* insertNodeAt */])(_this7.rootContainer, item, index);
 
         if (item.parentNode) {
           external_commonjs_sortablejs_commonjs2_sortablejs_amd_sortablejs_root_Sortable_default.a.utils.deselect(item);
@@ -4552,12 +4550,12 @@ var draggableComponent = {
 
       var indiciesToRemove = getIndiciesToRemove(items, headerSize);
       indiciesToRemove.forEach(function (oldIndex) {
-        return _this8.resetTransitionData(oldIndex);
+        return _this7.resetTransitionData(oldIndex);
       });
       this.removeAllFromList(indiciesToRemove); // emit change
 
       var removed = indiciesToRemove.sort().map(function (oldIndex) {
-        var context = _this8.multidragContexts.find(function (e) {
+        var context = _this7.multidragContexts.find(function (e) {
           return e.index === oldIndex;
         });
 
@@ -4597,7 +4595,7 @@ var draggableComponent = {
       }
     },
     onDragUpdateMulti: function onDragUpdateMulti(evt) {
-      var _this9 = this;
+      var _this8 = this;
 
       var items = evt.items,
           from = evt.from; // for match item index and element index
@@ -4619,23 +4617,24 @@ var draggableComponent = {
         return Object(helper["c" /* insertNodeAt */])(from, e.multiDragElement, e.index);
       }); // move items
 
+      var newLowestIndex = evt.newIndicies && evt.newIndicies.length > 0 ? evt.newIndicies[0].index : evt.newIndex;
       var oldIndicies = itemsWithIndex.map(function (_ref11) {
         var index = _ref11.index;
         return index - headerSize;
       });
-      var newIndex = this.getVmIndex(evt.newIndicies[0].index); // note: Array.from = prevent sort change side effect
+      var newIndex = this.getVmIndex(newLowestIndex); // note: Array.from = prevent sort change side effect
 
       this.updatePositions(Array.from(oldIndicies), newIndex); // emit change
 
       var moved = oldIndicies.map(function (oldIndex, index) {
-        var context = _this9.multidragContexts.find(function (e) {
+        var context = _this8.multidragContexts.find(function (e) {
           return e.index === oldIndex;
         });
 
         return {
           element: context.element,
           oldIndex: oldIndex,
-          newIndex: _this9.getVmIndex(evt.newIndex) + index
+          newIndex: newIndex + index
         };
       });
       this.emitChanges({
