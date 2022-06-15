@@ -501,13 +501,17 @@ const draggableComponent = {
       // remove nodes
       evt.items.forEach(e => removeNode(e));
       // insert elements
-      const newIndex = this.getVmIndex(evt.newIndex);
+      const newLowestIndex =
+        evt.newIndicies && evt.newIndicies.length > 0
+          ? evt.newIndicies[0].index
+          : evt.newIndex;
+      const newIndex = this.getVmIndex(newLowestIndex);
       this.spliceList(newIndex, 0, ...elements);
       this.computeIndexes();
       // emit change
       const added = elements.map((element, index) => ({
         element,
-        newIndex: newIndex + index
+        newIndex: this.getVmIndex(evt.newIndex) + index
       }));
       this.emitChanges({ added });
     },
@@ -600,9 +604,10 @@ const draggableComponent = {
       itemsWithIndex.forEach(e =>
         insertNodeAt(from, e.multiDragElement, e.index)
       );
+
       // move items
       const oldIndicies = itemsWithIndex.map(({ index }) => index - headerSize);
-      const newIndex = this.getVmIndex(evt.newIndex);
+      const newIndex = this.getVmIndex(evt.newIndicies[0].index);
       // note: Array.from = prevent sort change side effect
       this.updatePositions(Array.from(oldIndicies), newIndex);
       // emit change
@@ -611,7 +616,7 @@ const draggableComponent = {
         return {
           element: context.element,
           oldIndex,
-          newIndex: newIndex + index
+          newIndex: this.getVmIndex(evt.newIndex) + index
         };
       });
       this.emitChanges({ moved });
