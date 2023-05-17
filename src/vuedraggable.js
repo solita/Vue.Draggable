@@ -494,7 +494,10 @@ const draggableComponent = {
     },
 
     onDragAddMulti(evt) {
-      const elements = evt.item._underlying_vm_;
+      const elements = Array.isArray(evt.item._underlying_vm_)
+        ? evt.item._underlying_vm_
+        : [evt.item._underlying_vm_];
+
       if (elements === undefined) {
         return;
       }
@@ -552,7 +555,7 @@ const draggableComponent = {
       });
       // if clone
       if (evt.pullMode === "clone") {
-        removeNode(evt.clone);
+        evt.clones.forEach(removeNode);
         return;
       }
       // remove items and reset transition data

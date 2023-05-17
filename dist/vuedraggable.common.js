@@ -4466,7 +4466,7 @@ var draggableComponent = {
       }
     },
     onDragAddMulti: function onDragAddMulti(evt) {
-      var elements = evt.item._underlying_vm_;
+      var elements = Array.isArray(evt.item._underlying_vm_) ? evt.item._underlying_vm_ : [evt.item._underlying_vm_];
 
       if (elements === undefined) {
         return;
@@ -4542,7 +4542,7 @@ var draggableComponent = {
       }); // if clone
 
       if (evt.pullMode === "clone") {
-        Object(helper["d" /* removeNode */])(evt.clone);
+        evt.clones.forEach(helper["d" /* removeNode */]);
         return;
       } // remove items and reset transition data
       // - "order by index desc" (call reverse()) for prevent Array.splice side effect

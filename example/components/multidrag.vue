@@ -5,18 +5,24 @@
       <draggable
         class="list-group"
         v-model="list1"
-        group="people"
+        :group="{
+          name: 'available-components',
+          pull: 'clone',
+          put: false
+        }"
         multi-drag
         selected-class="selected"
         @change="log"
         @select="log"
+        @start="log"
+        @end="log"
         @deselect="log"
         :move="log"
       >
         <div
           class="list-group-item"
           v-for="(element, index) in list1"
-          :key="element.name"
+          :key="element.id"
         >
           {{ element.name }} {{ index }}
         </div>
@@ -28,7 +34,10 @@
       <draggable
         class="list-group"
         v-model="list2"
-        group="people"
+        :group="{
+          name: 'selected-components',
+          put: ['available-components']
+        }"
         multi-drag
         selected-class="selected"
         @change="log"
@@ -39,7 +48,7 @@
         <div
           class="list-group-item"
           v-for="(element, index) in list2"
-          :key="element.name"
+          :key="element.id"
         >
           {{ element.name }} {{ index }}
         </div>
@@ -96,7 +105,7 @@ export default {
       };
     },
     log: function(evt) {
-      window.console.log(evt);
+      //window.console.log(evt);
     }
   }
 };
